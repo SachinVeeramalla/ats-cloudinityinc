@@ -17,7 +17,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 withAWS(credentials: 'aws-sam-key') {
-                    sh 'sam deploy --stack-name sam-app --capabilities CAPABILITY_IAM'
+                    sh 'sam deploy --stack-name sam-app --capabilities CAPABILITY_IAM' 
                 }
             }
         }
