@@ -179,6 +179,16 @@ const Login = () => {
               {error && (
                 <p className="text-center text-xs text-red-500">{error}</p>
               )}
+              {/* Sign Up Link */}
+              <p className="text-sm text-center font-light text-gray-500 dark:text-white">
+                Don’t have an account?{" "}
+                <a
+                  href="#"
+                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                >
+                  Sign up
+                </a>
+              </p>
             </form>
           </div>
         </div>
