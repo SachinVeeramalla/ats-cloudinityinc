@@ -3,15 +3,14 @@ import { useNavigate } from "react-router-dom";
 import authenticateUser from "../authenticateUser";
 import { IoMdRefreshCircle } from "react-icons/io";
 import loginImg from "../assets/CloudinityLogo.png"; // Ensure the path is correct
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   const [usernameErr, setUsernameErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const [error, setError] = useState("");
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
@@ -57,14 +56,8 @@ const Login = () => {
     event.preventDefault();
     if (validation()) {
       try {
-        const response = await authenticateUser(
-          username,
-          password,
-          newPassword
-        );
-        if (response.status === "newPasswordRequired") {
-          setIsChangingPassword(true);
-        } else if (response.status === "success") {
+        const response = await authenticateUser(username, password);
+        if (response.status === "success") {
           // Save credentials in local storage if remember me is checked
           if (rememberMe) {
             localStorage.setItem("username", username);
@@ -85,23 +78,24 @@ const Login = () => {
     setRememberMe(event.target.checked);
   };
 
+  // const handleSignUpClick = () => {
+  //   navigate("/signup");
+  // };
+
   return (
     <section className="bg-sky-300 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full h-auto bg-blue-200 rounded-lg shadow dark:border sm:max-w-md md:mt-0 xl:p-0">
-          <a
-            href="#"
-            className="flex items-center justify-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-          >
+          <div className="flex items-center justify-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
             <img
               className="w-full h-48 object-contain"
               src={loginImg}
               alt="logo"
             />
-          </a>
+          </div>
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-3xl  text-center text-gray-900 leading-normal md:text-4xl dark:text-black">
-              Log In
+            <h1 className="text-3xl md:text-4xl text-center leading-normal font-bold text-orange-500">
+              Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               {/* Username Input */}
@@ -158,17 +152,18 @@ const Login = () => {
                     onChange={handleRememberMeChange}
                     className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-300 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                   />
-                  <span className="ml-2 text-sm text-gray-900 dark:text-white">
+                  <span className="ml-2 text-sm text-gray-900 dark:text-black">
                     Remember me
                   </span>
                 </label>
-                <a
-                  href="#"
+
+                <Link
+                  to="/forgot-password"
                   className="flex items-center text-sm font-medium text-primary-600 hover:underline dark:text-black"
                 >
                   Forgot password?
                   <IoMdRefreshCircle className="ml-1" />
-                </a>
+                </Link>
               </div>
               <button
                 type="submit"
@@ -180,14 +175,14 @@ const Login = () => {
                 <p className="text-center text-xs text-red-500">{error}</p>
               )}
               {/* Sign Up Link */}
-              <p className="text-sm text-center font-light text-gray-500 dark:text-white">
+              <p className="text-sm text-center font-light text-gray-500 dark:text-black">
                 Don’t have an account?{" "}
-                <a
-                  href="#"
+                <Link
+                  to="/signup"
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Sign up
-                </a>
+                </Link>
               </p>
             </form>
           </div>
