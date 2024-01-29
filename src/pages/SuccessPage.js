@@ -1,10 +1,46 @@
 import React, { useState } from "react";
 
 const SuccessPage = () => {
+  const [formData, setFormData] = useState({
+    FullName: "",
+    RequiredID: "",
+    RequiredTitle: "",
+    Role: "",
+    RequiredCreationDate: "",
+    VendorID: "",
+    ImmigrationStatus: "",
+    ContractType: "",
+    SubmissionDate: "",
+    RequiredSubmissionEndDate: "",
+    CandidateCurrentLocation: "",
+    ContactNumber: "",
+    RecruiterName: "",
+    State: "",
+    SubmissionStatus: "",
+    VendorRate: "",
+    CandidatePayRate: "",
+    BillRateMargin: "",
+    ResumeSource: "",
+    EmailId: "",
+    LinkedInID: "",
+    EmployerInformation: "",
+    ProfessionalReferences: "",
+    DOB: "",
+    RequiredSkills: "",
+    ResumeFormatingNeeded: "",
+    FormatedBy: "",
+    Password: "",
+    PasswordConfirmation: "",
+    Resume: null, // Handle file uploads separately if needed
+  });
   const [showPopup, setShowPopup] = useState(false);
-
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(JSON.stringify(formData)); // Convert formData to JSON
     setShowPopup(true);
   };
 
@@ -32,6 +68,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Full Name"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.FullName}
               />
             </div>
             <div>
@@ -46,6 +84,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="ID"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.RequiredID}
               />
             </div>
             <div>
@@ -60,6 +100,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Title"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.RequiredTitle}
               />
             </div>
             <div>
@@ -71,6 +113,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Role"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.Role}
               />
             </div>
             <div>
@@ -85,6 +129,8 @@ const SuccessPage = () => {
                 type="Number"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.RequiredCreationDate}
               />
             </div>
             <div>
@@ -99,6 +145,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Vendor ID"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.VendorID}
               />
             </div>
             <div>
@@ -113,6 +161,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Immigration Status"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.ImmigrationStatus}
               />
             </div>
             <div>
@@ -127,6 +177,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Contract Type"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.ContractType}
               />
             </div>
             <div>
@@ -141,6 +193,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.SubmissionDate}
               />
             </div>
             <div>
@@ -155,6 +209,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.RequiredSubmissionEndDate}
               />
             </div>
             <div>
@@ -169,6 +225,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Candidate Current Location"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.CandidateCurrentLocation}
               />
             </div>
             <div>
@@ -183,6 +241,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Contact Number"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.ContactNumber}
               />
             </div>
             <div>
@@ -197,6 +257,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Recruiter Name"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.RecruiterName}
               />
             </div>
             <div>
@@ -208,6 +270,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="State"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.State}
               />
             </div>
             <div>
@@ -222,6 +286,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Submission Status"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.SubmissionStatus}
               />
             </div>
             <div>
@@ -236,6 +302,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Vendor Rate "
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.VendorRate}
               />
             </div>
             <div>
@@ -250,6 +318,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Candidate Pay Rate"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.CandidatePayRate}
               />
             </div>
             <div>
@@ -264,6 +334,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Bill Rate Margin"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.BillRateMargin}
               />
             </div>
             <div>
@@ -278,6 +350,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Resume Source"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.ResumeSource}
               />
             </div>
 
@@ -292,6 +366,8 @@ const SuccessPage = () => {
                 id="emailId"
                 type="email"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.emailId}
               />
             </div>
             <div>
@@ -306,6 +382,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="LinkedIn ID"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.LinkedInID}
               />
             </div>
             <div>
@@ -320,6 +398,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Employer Information"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.EmployerInformation}
               />
             </div>
             <div>
@@ -334,6 +414,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Professional References "
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.ProfessionalReferences}
               />
             </div>
             <div>
@@ -345,6 +427,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.DOB}
               />
             </div>
             <div>
@@ -359,6 +443,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Required Skills"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.RequiredSkills}
               />
             </div>
             <div>
@@ -373,6 +459,8 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Resume Formating Needed?"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.ResumeFormatingNeeded}
               />
             </div>
             <div>
@@ -387,39 +475,14 @@ const SuccessPage = () => {
                 type="text"
                 placeholder="Formated By "
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                onChange={handleInputChange} // attach handleInputChange here
+                value={formData.FormatedBy}
               />
             </div>
 
-            <div>
-              <label
-                className="text-white dark:text-gray-200"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              />
-            </div>
-
-            <div>
-              <label
-                className="text-white dark:text-gray-200"
-                htmlFor="passwordConfirmation"
-              >
-                Password Confirmation
-              </label>
-              <input
-                id="passwordConfirmation"
-                type="password"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              />
-            </div>
             <div>
               <label className="block text-sm font-medium text-white">
-                Image
+                Resume
               </label>
               <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                 <div className="space-y-1 text-center">
@@ -447,6 +510,7 @@ const SuccessPage = () => {
                         id="file-upload"
                         name="file-upload"
                         type="file"
+                        onChange={handleInputChange} // attach handleInputChange here
                         className="sr-only"
                       />
                     </label>
