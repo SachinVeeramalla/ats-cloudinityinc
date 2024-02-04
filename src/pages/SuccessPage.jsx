@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-const SuccessPage = () => {
+function SuccessPage() {
   const initialFormData = {
     FullName: "",
     RequiredID: "",
@@ -27,15 +27,14 @@ const SuccessPage = () => {
     ProfessionalReferences: "",
     DOB: "",
     RequiredSkills: "",
-    ResumeFormatingNeeded: "",
-    FormatedBy: "",
-    Resume: null,
+    ResumeFormattingNeeded: "",
+    FormattedBy: "",
+    Resume: null, // Placeholder for the resume file
   };
-
   const [formData, setFormData] = useState(initialFormData);
   const [validationErrors, setValidationErrors] = useState({});
   const [showPopup, setShowPopup] = useState(false);
-  const resumeInputRef = useRef(null); // Create a ref for the resume input
+  const resumeInputRef = useRef(null);
 
   const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -99,12 +98,63 @@ const SuccessPage = () => {
     setValidationErrors(newErrors);
     return isValid;
   };
+  const uploadResume = async (file) => {
+    const filename = encodeURIComponent(file.name);
+    const uploadUrl = `https://lrl0r0t06c.execute-api.us-east-1.amazonaws.com/Prod/upload/${filename}`;
+    const fileData = new FormData();
+    fileData.append("file", file);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (validateForm()) {
-      console.log("Form Data Submitted:", formData);
-      setShowPopup(true);
+    try {
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        body: fileData,
+      });
+      const data = await response.json();
+
+      console.log("Server response:", data);
+
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+
+      // Since the server confirms success but doesn't provide a URL, log the success and maybe return a success message instead
+      if (data.message === "File uploaded successfully") {
+        console.log(data.message);
+        // Return a static message or a mock URL, or adjust as needed
+        return "Upload successful, no URL provided"; // Placeholder return value
+      } else {
+        throw new Error(
+          "Unexpected server response, upload may not be successful."
+        );
+      }
+    } catch (error) {
+      console.error("Upload Error:", error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      console.log("Form validation failed", validationErrors);
+      return;
+    }
+
+    if (formData.Resume) {
+      try {
+        // Note: `uploadResult` now may not be a URL but a success message
+        const uploadResult = await uploadResume(formData.Resume);
+        console.log(uploadResult); // Log the success message or handle as needed
+
+        // Proceed with the rest of your form submission logic
+        console.log("Form Data:", JSON.stringify(formData, null, 2));
+        setShowPopup(true);
+      } catch (error) {
+        alert("Failed to upload resume: " + error.message);
+      }
+    } else {
+      alert("Please select a resume to upload.");
     }
   };
 
@@ -113,32 +163,34 @@ const SuccessPage = () => {
     setFormData(initialFormData);
     setValidationErrors({});
     if (resumeInputRef.current) {
-      resumeInputRef.current.value = ""; // Clear the file input
+      resumeInputRef.current.value = "";
     }
   };
 
   return (
     <div>
+      {/* The form component with Tailwind CSS */}
       <section className="max-w-4xl p-6 mx-auto bg-indigo-600 rounded-md shadow-md dark:bg-gray-800 mt-20">
         <h1 className="text-xl font-bold text-white capitalize dark:text-white">
           Employee Information Form
         </h1>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-            {/* Dynamically generate input fields based on formData */}
+            {/* Input fields generated based on formData */}
             {Object.keys(initialFormData)
               .filter((key) => key !== "Resume")
               .map((key) => (
                 <div key={key} className="mb-4">
                   <label
-                    className="text-white dark:text-gray-200 block text-sm font-bold mb-2"
                     htmlFor={key}
+                    className="text-white dark:text-gray-200 block text-sm font-bold mb-2"
                   >
                     {key.replace(/([A-Z])/g, " $1").trim()}
                   </label>
                   <input
                     type="text"
                     id={key}
+                    name={key}
                     value={formData[key]}
                     onChange={handleInputChange}
                     className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
@@ -151,7 +203,10 @@ const SuccessPage = () => {
                 </div>
               ))}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-white">
+              <label
+                htmlFor="Resume"
+                className="block text-sm font-medium text-white"
+              >
                 Resume
               </label>
               <input
@@ -159,12 +214,12 @@ const SuccessPage = () => {
                 name="Resume"
                 type="file"
                 onChange={handleInputChange}
-                ref={resumeInputRef} // Assign the ref to the file input
+                ref={resumeInputRef}
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
               />
-              {validationErrors.Resume && (
+              {validationErrors["Resume"] && (
                 <p className="text-red-500 text-xs italic">
-                  {validationErrors.Resume}
+                  {validationErrors["Resume"]}
                 </p>
               )}
             </div>
@@ -193,6 +248,6 @@ const SuccessPage = () => {
       )}
     </div>
   );
-};
+}
 
 export default SuccessPage;
