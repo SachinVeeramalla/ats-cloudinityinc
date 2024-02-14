@@ -66,6 +66,7 @@ const Login = () => {
             localStorage.removeItem("username");
             localStorage.removeItem("password");
           }
+          // navigate("/Dashboard");
           navigate("/success");
         }
       } catch (err) {
