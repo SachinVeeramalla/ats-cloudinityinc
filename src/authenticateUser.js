@@ -1,5 +1,8 @@
 import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import UserPool from "./CognitoConfig";
+// import Amplify, { Auth } from "aws-amplify";
+
+// Amplify.configure(awsExports);
 
 const authenticateUser = (username, password, newPassword) => {
   return new Promise((resolve, reject) => {

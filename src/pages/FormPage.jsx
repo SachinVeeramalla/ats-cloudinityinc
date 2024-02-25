@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 
 function FormPage() {
   const initialFormData = {
@@ -94,6 +96,11 @@ function FormPage() {
     return /\S+@\S+\.\S+/.test(email);
   };
 
+  const isValidPhoneNumber = (phoneNumber) => {
+    const pattern = /^\+?[1-9]\d{1,14}$/; // Basic international phone number pattern
+    return pattern.test(phoneNumber);
+  };
+
   const handleInputChange = (e) => {
     const { id, value, files } = e.target;
     if (id === "Resume" && files) {
@@ -153,6 +160,11 @@ function FormPage() {
       isValid = false;
     }
 
+    if (formData.ContactNumber && !isValidPhoneNumber(formData.ContactNumber)) {
+      newErrors.ContactNumber = "Invalid phone number format.";
+      isValid = false;
+    }
+
     // Check for resume upload
     if (!formData.Resume) {
       newErrors.Resume = "Please upload a resume.";
@@ -163,10 +175,26 @@ function FormPage() {
     return isValid;
   };
 
+  // function fileToBase64(file) {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = (error) => reject(error);
+  //     reader.readAsDataURL(file);
+  //   });
+  // }
+
   const uploadResume = async (file) => {
     const filename = encodeURIComponent(file.name);
     // const uploadUrl = `${process.env.REACT_APP_API_URL}/${formData.ReqId}/${filename}`;
     const uploadUrl = `${process.env.REACT_APP_API_URL}/${filename}`;
+
+    // const fileBase64 = await fileToBase64(file); // Convert file to base64 string
+    // const data = {
+    //   file: fileBase64,
+    //   reqId: reqId,
+    //   fullName: fullName,
+    // };
 
     const fileData = new FormData();
     fileData.append("file", file);
@@ -175,6 +203,7 @@ function FormPage() {
       const response = await fetch(uploadUrl, {
         method: "POST",
         body: fileData,
+        // body: JSON.stringify(data),
       });
       const data = await response.json();
 
@@ -271,6 +300,7 @@ function FormPage() {
 
   return (
     <div>
+      <Header />
       <section className="max-w-4xl p-6 mx-auto bg-indigo-600 rounded-md shadow-md dark:bg-gray-800 mt-20">
         <h1 className="text-xl font-bold text-white capitalize dark:text-white">
           Employee Information Form
@@ -366,7 +396,7 @@ function FormPage() {
               <input
                 id="ReqCreationDate"
                 // type="Number"
-                type="String"
+                type="Date"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                 onChange={handleInputChange} // attach handleInputChange here
@@ -567,7 +597,7 @@ function FormPage() {
               </label>
               <input
                 id="SubmissionDate"
-                type="String"
+                type="Date"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                 onChange={handleInputChange} // attach handleInputChange here
@@ -588,7 +618,7 @@ function FormPage() {
               </label>
               <input
                 id="ReqSubmissionEndDate"
-                type="String"
+                type="Date"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                 onChange={handleInputChange} // attach handleInputChange here
@@ -776,44 +806,7 @@ function FormPage() {
                 )}
               </div>
             </div>
-            {/* <div>
-              <label
-                className="text-white dark:text-gray-200"
-                htmlFor="SubmissionStatus"
-              >
-                Submission Status
-              </label> */}
-            {/* <input
-                id="SubmissionStatus"
-                type="String"
-                placeholder="Submission Status"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                onChange={handleInputChange} // attach handleInputChange here
-                value={formData.SubmissionStatus}
-              /> */}
-            {/* <select
-                id="SubmissionStatus"
-                type="String"
-                value={selectSubmissionStatus}
-                onChange={(e) => {
-                  setSelectSubmissionStatus(e.target.value);
-                  handleDropdownChange(e);
-                }}
-              > */}
-            {/* <option value="Select an option">Select an option</option>
 
-                {submissionStatus.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {validationErrors.SubmissionStatus && (
-                <p className="text-red-500 text-xs italic">
-                  {validationErrors.SubmissionStatus}
-                </p>
-              )}
-            </div> */}
             <div className="flex items-center justify-between">
               <label
                 htmlFor="SubmissionStatus"
@@ -1057,7 +1050,7 @@ function FormPage() {
               </label>
               <input
                 id="DOB"
-                type="String"
+                type="Date"
                 placeholder="MM/DD/YYYY"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                 onChange={handleInputChange} // attach handleInputChange here
@@ -1178,8 +1171,102 @@ function FormPage() {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }
 
 export default FormPage;
+
+// import React, { useState } from "react";
+// import axios from "axios";
+
+// const UploadForm = () => {
+//   const [file, setFile] = useState(null);
+//   const [reqId, setReqId] = useState("");
+//   const [fullName, setFullName] = useState("");
+
+//   const handleFileChange = (e) => {
+//     setFile(e.target.files[0]);
+//   };
+
+//   const handleReqIdChange = (e) => {
+//     setReqId(e.target.value);
+//   };
+
+//   const handleFullNameChange = (e) => {
+//     setFullName(e.target.value);
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     // Check if the file is selected
+//     if (!file) {
+//       console.error("No file selected.");
+//       return;
+//     }
+
+//     // Upload file to S3
+//     const uploadFormData = new FormData(); // Renamed variable for clarity
+//     uploadFormData.append("file", file);
+
+//     try {
+//       // First, upload the file
+//       await axios.post(
+//         "https://lrl0r0t06c.execute-api.us-east-1.amazonaws.com/Prod/upload",
+//         uploadFormData,
+//         {
+//           headers: {
+//             "Content-Type": "multipart/form-data",
+//           },
+//         }
+//       );
+
+//       // Once file is uploaded to S3, submit additional form data to another API
+//       const additionalFormData = {
+//         // Renamed and corrected to object for JSON payload
+//         reqId: reqId,
+//         fullName: fullName,
+//         // Include any additional fields here
+//       };
+
+//       await axios.post(
+//         "https://mkou1u2f62.execute-api.us-east-1.amazonaws.com/Prod/submit",
+//         additionalFormData, // Corrected to send JSON data
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+
+//       // Clear form fields after successful submission
+//       setFile(null);
+//       setReqId("");
+//       setFullName("");
+//     } catch (error) {
+//       console.error("Error uploading file or submitting form data:", error);
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <div>
+//         <label>Req ID:</label>
+//         <input type="text" value={reqId} onChange={handleReqIdChange} />
+//       </div>
+//       <div>
+//         <label>Full Name:</label>
+//         <input type="text" value={fullName} onChange={handleFullNameChange} />
+//       </div>
+//       <div>
+//         <label>Upload File:</label>
+//         <input type="file" onChange={handleFileChange} />
+//       </div>
+//       <button type="submit">Submit</button>
+//     </form>
+//   );
+// };
+
+// export default UploadForm;
