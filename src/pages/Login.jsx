@@ -66,8 +66,8 @@ const Login = () => {
             localStorage.removeItem("username");
             localStorage.removeItem("password");
           }
-          // navigate("/Dashboard");
-          navigate("/success");
+          navigate("/Dashboard");
+          // navigate("/success");
         }
       } catch (err) {
         setError(err.message || "An error occurred during login");
