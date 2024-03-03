@@ -5,6 +5,60 @@ import React, { useState, useEffect } from "react";
 
 const UsersPage = () => {
   const [data, setData] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState([
+    "ReqId",
+    "FullName",
+    "EmailID",
+    "Role",
+    "DOB",
+    "ReqSkills",
+    "ReqCreationDate",
+    "ReqTitle",
+    "ImmigrationStatus",
+    "ContractType",
+    // Initially visible columns. Adjust as needed.
+  ]);
+
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const allColumns = [
+    "ReqId",
+    "FullName",
+    "EmailID",
+    "Role",
+    "DOB",
+    "ReqSkills",
+    "ReqCreationDate",
+    "ReqTitle",
+    "ImmigrationStatus",
+    "ContractType",
+    "SubmissionDate",
+    "ReqSubmissionEndDate",
+    "CandidateCurrentLocation",
+    "ContactNumber",
+    "RecruiterName",
+    "State",
+    "SubmissionStatus",
+    "VendorRate",
+    "CandidatePayRate",
+    "BillRateMargin",
+    "BillRate",
+    "ResumeSource",
+    "EmailID",
+    "VendorID",
+    "LinkedInID",
+    "EmployerInformation",
+    "ProfessionalReferences",
+    "ResumeFormattingNeeded",
+    "FormattedBy",
+  ];
+
+  const toggleColumnVisibility = (column) => {
+    setVisibleColumns((prev) =>
+      prev.includes(column)
+        ? prev.filter((c) => c !== column)
+        : [...prev, column]
+    );
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,99 +85,41 @@ const UsersPage = () => {
     <div className="Users Table flex">
       <Sidebar />
       <div className="overflow-x-auto relative shadow-md sm:rounded-lg m-8">
+        {/* Filter Button */}
+        <div>
+          <button
+            onClick={() => setIsFilterVisible(!isFilterVisible)}
+            className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded origin-top-right "
+          >
+            Filter
+          </button>
+          {isFilterVisible && (
+            <div className="absolute z-10 bg-white p-4 shadow-lg rounded">
+              {allColumns.map((column) => (
+                <div key={column}>
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.includes(column)}
+                    onChange={() => toggleColumnVisibility(column)}
+                  />{" "}
+                  {column}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           {/* Table Header */}
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="py-3 px-6">
-                Req Id
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Full Name
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Email ID
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Role
-              </th>
-              <th scope="col" className="py-3 px-6">
-                DOB
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Req Skills
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Req Creation Date
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Req Title
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Immigration Status
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Contract Type
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Submission Date
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Req Submission End Date
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Candidate Current Location
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Contact Number
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Recruiter Name
-              </th>
-              <th scope="col" className="py-3 px-6">
-                State
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Submission Status
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Vendor Rate
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Candidate Pay Rate
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Bill Rate Margin
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Bill Rate
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Resume Source
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Email ID
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Vendor ID
-              </th>
-              <th scope="col" className="py-3 px-6">
-                LinkedIn ID
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Employer Information
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Professional References
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Resume Formatting Needed
-              </th>
-              <th scope="col" className="py-3 px-6">
-                Formatted By
-              </th>
-
-              {/* Add more headers as needed */}
+              {allColumns
+                .filter((column) => visibleColumns.includes(column))
+                .map((column) => (
+                  <th key={column} scope="col" className="py-3 px-6">
+                    {column}
+                  </th>
+                ))}
             </tr>
           </thead>
           {/* Table Body */}
@@ -133,10 +129,13 @@ const UsersPage = () => {
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
-                <td className="py-4 px-6">{item.ReqId}</td>
-                <td className="py-4 px-6">{item.FullName}</td>
-                <td className="py-4 px-6">{item.ReqTitle}</td>
-                {/* Render more data as needed */}
+                {allColumns
+                  .filter((column) => visibleColumns.includes(column))
+                  .map((column) => (
+                    <td key={column} className="py-4 px-6">
+                      {item[column]}
+                    </td>
+                  ))}
               </tr>
             ))}
           </tbody>
