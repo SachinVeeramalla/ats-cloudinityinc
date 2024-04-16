@@ -255,14 +255,15 @@ function FormPage() {
     console.log("Uploading file:", file.name, file.size, file.type);
     fileData.append("file", file, filename);
 
-    console.log("Before File Data :", fileData);
     try {
       const response = await fetch(uploadUrl, {
         method: "POST",
         body: fileData,
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
       });
 
-      console.log("After File Data :", fileData);
       const data = await response.json();
 
       console.log("Server response:", data);
