@@ -48,7 +48,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/Dashboard" element={<Dashboard />} />
-        <Route index element={<Dashboard />} />
+        {/* <Route index element={<Dashboard />} /> */}
         <Route path="/users" element={<Users />} />
         <Route path="/logout" element={<Login />} />
         <Route path="/success" element={<FormPage />} />

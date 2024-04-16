@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
+import { useNavigate } from "react-router-dom";
 
 function FormPage() {
   const initialFormData = {
@@ -33,7 +34,8 @@ function FormPage() {
     ReqSkills: "",
     ResumeFormattingNeeded: "",
     FormattedBy: "",
-    Resume: null, // Placeholder for the resume fileßƒ
+    Resume: null,
+    ResumeFileName: "", // Placeholder for the resume fileßƒ
   };
   const [formData, setFormData] = useState(initialFormData);
   const [validationErrors, setValidationErrors] = useState({});
@@ -63,6 +65,10 @@ function FormPage() {
   const submissionStatus = process.env.REACT_APP_SUBMISSION_STATUS.split(",");
   const [selectSubmissionStatus, setSelectSubmissionStatus] = useState("");
 
+  const formattingNeeded = process.env.REACT_APP_FOMATTING_NEEDED.split(",");
+  const [selectResumeFormattingNeeded, setSelectResumeFormattingNeeded] =
+    useState("");
+
   const [isImmigrationStatusDropdownOpen, setIsImmigrationStatusDropdownOpen] =
     useState(false);
 
@@ -77,6 +83,11 @@ function FormPage() {
   const [isSubmissionStatusDropdownOpen, setIsSubmissionStatusDropdownOpen] =
     useState(false);
 
+  const [
+    isResumeFormattingNeededDropdownOpen,
+    setIsResumeFormattingNeededDropdownOpen,
+  ] = useState(false);
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (!event.target.closest("#dropdownHoverContainer")) {
@@ -85,6 +96,7 @@ function FormPage() {
         setIsRecruiterNameDropdownOpen(false);
         setIsStateDropdownOpen(false);
         setIsSubmissionStatusDropdownOpen(false);
+        setIsResumeFormattingNeededDropdownOpen(false);
       }
     };
 
@@ -101,49 +113,13 @@ function FormPage() {
     return pattern.test(phoneNumber);
   };
 
-  // const handleInputChange = (e) => {
-  //   const { id, value, files } = e.target;
-
-  //   if (id === "Resume" && files) {
-  //     const file = files[0];
-  //     if (file) {
-  //       const allowedTypes = [
-  //         "application/pdf",
-  //         "application/msword",
-  //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  //       ];
-  //       if (!allowedTypes.includes(file.type) || file.size > 1024 * 1024 * 10) {
-  //         setValidationErrors({
-  //           ...validationErrors,
-  //           Resume: "Only PDF or DOC files under 10MB are allowed.",
-  //         });
-  //       } else {
-  //         setFormData({
-  //           ...formData,
-  //           Resume: file,
-  //         });
-  //         let newErrors = { ...validationErrors };
-  //         delete newErrors.Resume;
-  //         setValidationErrors(newErrors);
-  //       }
-  //     }
-  //   } else {
-  //     setFormData({
-  //       ...formData,
-  //       [id]: value,
-  //     });
-  //     let newErrors = { ...validationErrors };
-  //     delete newErrors[id];
-  //     setValidationErrors(newErrors);
-  //   }
-  // };
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { id, value, files } = e.target;
     let newFormData = { ...formData };
 
     if (id === "Resume" && files) {
-      // Existing logic for handling resume file input
       const file = files[0];
       if (file) {
         const allowedTypes = [
@@ -157,7 +133,11 @@ function FormPage() {
             Resume: "Only PDF or DOC files under 10MB are allowed.",
           });
         } else {
+          // Generate the filename and store it in the formData
+          const filename = `${newFormData.ReqId}_${newFormData.FullName}_${file.name}`;
           newFormData.Resume = file;
+          newFormData.ResumeFileName = filename; // Store the generated filename
+
           let newErrors = { ...validationErrors };
           delete newErrors.Resume;
           setValidationErrors(newErrors);
@@ -217,26 +197,72 @@ function FormPage() {
       isValid = false;
     }
 
+    if (formData.BillRateMargin < 0) {
+      newErrors.BillRateMargin =
+        "Bill Rate Margin cannot be negative. Please check the Bill Rate and Vendor Rate.";
+      isValid = false;
+    }
+
     setValidationErrors(newErrors);
     return isValid;
   };
 
+  // const uploadResume = async (file) => {
+  //   // const filename = encodeURIComponent(file.name);
+  //   // // const uploadUrl = `${process.env.REACT_APP_API_URL}/${formData.ReqId}/${filename}`;
+  //   // const uploadUrl = `${process.env.REACT_APP_API_URL}/${filename}`;
+  //   const filename = `${formData.ReqId}_${formData.FullName}_${file.name}`;
+  //   const uploadUrl = `${process.env.REACT_APP_API_URL}/${filename}`;
+
+  //   const fileData = new FormData();
+  //   fileData.append("file", file, filename);
+
+  //   try {
+  //     const response = await fetch(uploadUrl, {
+  //       method: "POST",
+  //       body: fileData,
+  //       // body: JSON.stringify(data),
+  //     });
+  //     const data = await response.json();
+
+  //     console.log("Server response:", data);
+
+  //     if (!response.ok) {
+  //       throw new Error(`Server responded with status: ${response.status}`);
+  //     }
+
+  //     // Since the server confirms success but doesn't provide a URL, log the success and maybe return a success message instead
+  //     if (data.message === "File uploaded successfully") {
+  //       console.log(data.message);
+  //       // Return a static message or a mock URL, or adjust as needed
+  //       return "Upload successful, no URL provided"; // Placeholder return value
+  //     } else {
+  //       throw new Error(
+  //         "Unexpected server response, upload may not be successful."
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Upload Error:", error);
+  //     throw error;
+  //   }
+  // };
+
   const uploadResume = async (file) => {
-    // const filename = encodeURIComponent(file.name);
-    // // const uploadUrl = `${process.env.REACT_APP_API_URL}/${formData.ReqId}/${filename}`;
-    // const uploadUrl = `${process.env.REACT_APP_API_URL}/${filename}`;
     const filename = `${formData.ReqId}_${formData.FullName}_${file.name}`;
     const uploadUrl = `${process.env.REACT_APP_API_URL}/${filename}`;
 
     const fileData = new FormData();
+    console.log("Uploading file:", file.name, file.size, file.type);
     fileData.append("file", file, filename);
 
+    console.log("Before File Data :", fileData);
     try {
       const response = await fetch(uploadUrl, {
         method: "POST",
         body: fileData,
-        // body: JSON.stringify(data),
       });
+
+      console.log("After File Data :", fileData);
       const data = await response.json();
 
       console.log("Server response:", data);
@@ -245,11 +271,9 @@ function FormPage() {
         throw new Error(`Server responded with status: ${response.status}`);
       }
 
-      // Since the server confirms success but doesn't provide a URL, log the success and maybe return a success message instead
       if (data.message === "File uploaded successfully") {
         console.log(data.message);
-        // Return a static message or a mock URL, or adjust as needed
-        return "Upload successful, no URL provided"; // Placeholder return value
+        return "Upload successful, no URL provided";
       } else {
         throw new Error(
           "Unexpected server response, upload may not be successful."
@@ -322,10 +346,12 @@ function FormPage() {
     setSelectStateName("");
     // setSelectQuestionnaire("");
     setSelectSubmissionStatus("");
+    setSelectResumeFormattingNeeded("");
     setValidationErrors({});
     if (resumeInputRef.current) {
       resumeInputRef.current.value = "";
     }
+    navigate("/users");
   };
 
   return (
@@ -915,7 +941,7 @@ function FormPage() {
               </label>
               <input
                 id="VendorRate"
-                type="String"
+                type="number"
                 placeholder="Vendor Rate "
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                 onChange={handleInputChange} // attach handleInputChange here
@@ -1114,27 +1140,76 @@ function FormPage() {
                 </p>
               )}
             </div>
-            <div>
+            <div className="flex items-center justify-between">
               <label
-                className="text-white dark:text-gray-200"
                 htmlFor="ResumeFormattingNeeded"
+                className="text-white dark:text-gray-200 mr-4"
               >
                 Resume Formatting Needed?
               </label>
-              <input
-                id="ResumeFormattingNeeded"
-                type="String"
-                placeholder="Resume Formating Needed?"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                onChange={handleInputChange} // attach handleInputChange here
-                value={formData.ResumeFormattingNeeded}
-              />
-              {validationErrors.ResumeFormattingNeeded && (
-                <p className="text-red-500 text-xs italic">
-                  {validationErrors.ResumeFormattingNeeded}
-                </p>
-              )}
+
+              <div id="dropdownHoverContainer" className="relative">
+                <button
+                  onClick={() =>
+                    setIsResumeFormattingNeededDropdownOpen(
+                      !isResumeFormattingNeededDropdownOpen
+                    )
+                  }
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  type="button"
+                >
+                  {selectResumeFormattingNeeded || "Select Option"}
+                  <svg
+                    className="w-10 h-5 ml-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 8l4 4 4-4"
+                    />
+                  </svg>
+                </button>
+
+                {isResumeFormattingNeededDropdownOpen && (
+                  <div className="absolute z-10 mt-1 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+                      {formattingNeeded.map((status, index) => (
+                        <li key={index}>
+                          <button
+                            type="button"
+                            className="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                            onClick={() => {
+                              setSelectResumeFormattingNeeded(status);
+                              handleDropdownChange({
+                                target: {
+                                  id: "ResumeFormattingNeeded",
+                                  value: status,
+                                },
+                              });
+                              setIsResumeFormattingNeededDropdownOpen(false);
+                            }}
+                          >
+                            {status}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {validationErrors.ResumeFormattingNeeded && (
+                  <p className="text-red-500 text-xs italic mt-2">
+                    {validationErrors.ResumeFormattingNeeded}
+                  </p>
+                )}
+              </div>
             </div>
+
             <div>
               <label
                 className="text-white dark:text-gray-200"
