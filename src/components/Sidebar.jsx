@@ -8,8 +8,8 @@ import { SlLogout } from "react-icons/sl";
 function Sidebar() {
   const [open, setOpen] = useState(true);
   const Menu = [
-    { title: "Home", path: "/", icon: <FaHome /> },
-    { title: "Users", path: "/users", icon: <FaUser /> },
+    { title: "Home", path: "/Dashboard", icon: <FaHome /> },
+    { title: "Candidates", path: "/users", icon: <FaUser /> },
     { title: "Logout", path: "/logout", icon: <SlLogout /> },
   ];
 
