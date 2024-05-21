@@ -1,15 +1,11 @@
-import Sidebar from "../components/Sidebar";
-
-// src/components/UserTable.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 import { IoSearch } from "react-icons/io5";
 
 const UsersPage = () => {
   const [data, setData] = useState([]);
-
   const [searchTerm, setSearchTerm] = useState("");
-
   const [visibleColumns, setVisibleColumns] = useState([
     "ReqId",
     "FullName",
@@ -22,11 +18,9 @@ const UsersPage = () => {
     "ReqTitle",
     "ImmigrationStatus",
     "ContractType",
-    // Initially visible columns. Adjust as needed.
   ]);
 
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-  // const [addcandidate, setAddCandidate] = useState(false);
   const allColumns = [
     "ReqId",
     "FullName",
@@ -51,7 +45,6 @@ const UsersPage = () => {
     "BillRateMargin",
     "BillRate",
     "ResumeSource",
-    // "EmailID",
     "VendorID",
     "LinkedInID",
     "EmployerInformation",
@@ -60,7 +53,37 @@ const UsersPage = () => {
     "FormattedBy",
     "Date",
   ];
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(process.env.REACT_APP_FETCH_DATA);
+        if (!response.ok) {
+          throw new Error("Data could not be fetched!");
+        }
+        const result = await response.json(); // This is the outer JSON object
+        console.log("Fetched Data:", result);
+        if (result.body) {
+          const actualData = JSON.parse(result.body); // Parse the stringified JSON array
+          console.log("Parsed Data Array:", actualData);
+          if (Array.isArray(actualData)) {
+            setData(actualData);
+          } else {
+            console.error("Parsed data is not an array:", actualData);
+          }
+        } else {
+          console.error("Response JSON does not contain 'body':", result);
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const toggleColumnVisibility = (column) => {
     setVisibleColumns((prev) =>
       prev.includes(column)
@@ -73,48 +96,18 @@ const UsersPage = () => {
     navigate("/success");
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(process.env.REACT_APP_FETCH_DATA);
-        if (!response.ok) {
-          throw new Error("Data could not be fetched!");
-        } else {
-          const data = await response.json();
-          setData(data); // Assuming the response JSON structure matches your data requirement
-          console.log("Data fetched successfully: ", data);
-        }
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const fetchResume = async (filename) => {
-    try {
-      const response = await fetch(
-        `Your API endpoint to get pre-signed URL?filename=${filename}`
-      );
-      if (!response.ok) {
-        throw new Error("Error fetching pre-signed URL");
-      }
-      const { url } = await response.json();
-      window.open(url, "_blank"); // Opens the pre-signed URL in a new tab, triggering the download
-    } catch (error) {
-      console.error("Error fetching resume: ", error);
-    }
-  };
-
-  // Filtering data based on search term
-  const filteredData = data.filter((item) => {
-    return allColumns.some(
-      (column) =>
-        item[column] &&
-        item[column].toString().toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+  const filteredData = Array.isArray(data)
+    ? data.filter((item) => {
+        return allColumns.some(
+          (column) =>
+            item[column] &&
+            item[column]
+              .toString()
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+        );
+      })
+    : [];
 
   return (
     <div className="flex">
@@ -156,7 +149,7 @@ const UsersPage = () => {
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md" // Adjusted width to make it smaller
+              className="w-64 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md"
             />
           </div>
         </div>

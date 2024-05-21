@@ -2,7 +2,6 @@
   "name": "sample-react-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://development.dcvngcurspb7s.amplifyapp.com",
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "@testing-library/jest-dom": "^5.17.0",
@@ -11,6 +10,8 @@
     "amazon-cognito-identity-js": "^6.3.7",
     "aws-sdk": "^2.1545.0",
     "axios": "^1.6.7",
+    "modules": "^0.4.0",
+    "node": "^22.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
