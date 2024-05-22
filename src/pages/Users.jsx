@@ -60,7 +60,9 @@ const UsersPage = () => {
     const fetchData = async () => {
       try {
         console.log("Fetching data...");
+        console.log("URL: ", process.env.REACT_APP_FETCH_DATA);
         const response = await fetch(process.env.REACT_APP_FETCH_DATA);
+
         console.log("Response:", response);
         if (!response.ok) {
           throw new Error("Data could not be fetched!");
