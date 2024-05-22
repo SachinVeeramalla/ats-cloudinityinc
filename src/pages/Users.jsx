@@ -59,12 +59,15 @@ const UsersPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("Fetching data...");
         const response = await fetch(process.env.REACT_APP_FETCH_DATA);
+        console.log("Response:", response);
         if (!response.ok) {
           throw new Error("Data could not be fetched!");
         }
+        console.log("Response OK");
         const result = await response.json(); // This is the outer JSON object
-        console.log("Fetched Data:", result);
+        console.log("Result Fetched:", result);
         if (result.body) {
           const actualData = JSON.parse(result.body); // Parse the stringified JSON array
           console.log("Parsed Data Array:", actualData);
